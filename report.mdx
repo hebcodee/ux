@@ -1,0 +1,251 @@
+# Documentação de Engenharia Reversa – Landing Page de Vitor Zaretzki
+
+Esta documentação em **MDX** descreve como recriar fielmente o design da landing page do portfólio de Vitor Zaretzki.  Ela é dividida em seções que cobrem o sistema de design, tipografia, estrutura de layout, componentes e tokens de design. As informações a seguir foram extraídas analisando o código CSS minificado do site e observando o layout visual, com base em variáveis HSL definidas no arquivo `index‑DMHqgn4l.css`【191108879806970†L207-L218】.
+
+## 1. Sistema de Design
+
+O site utiliza um conjunto de cores em HSL com tons frios de azul e cinza, gerando uma interface escura e elegante. As variáveis estão declaradas no `:root` do CSS【191108879806970†L207-L218】; abaixo estão convertidas para valores HEX para facilitar o uso.
+
+| Token | HSL (h s l) | HEX | Uso |
+|------|-------------|------|-----|
+| **Fundo (`--background`)** | `220 16% 10%` | `#15181D` | Plano de fundo geral da página, quase preto com nuance azul【191108879806970†L207-L218】. |
+| **Superfícies de cartão (`--card`)** | `220 14% 13%` | `#1C1F25` | Fundo de cartões de métricas, cards de projeto e seções internas【191108879806970†L207-L218】. |
+| **Superfícies intermediárias (`--surface‑3`/`--surface‑4`)** | `220 12% 17%` → `#262930` e `220 12% 22%` → `#31353E` | Escalas de cinza azulados utilizados em formas e zonas de destaque【191108879806970†L207-L218】. |
+| **Texto primário (`--text-primary`)** | `210 20% 92%` | `#E6EAEE` | Cor dos títulos e do texto principal【191108879806970†L217-L218】. |
+| **Texto secundário (`--text-secondary`)** | `210 12% 62%` | `#929EA9` | Subtítulos e legendas【191108879806970†L217-L218】. |
+| **Texto muted (`--text-muted`)** | `220 8% 44%` | `#676D79` | Texto menos relevante ou de apoio【191108879806970†L217-L218】. |
+| **Cor primária (`--accent-color`)** | `216 80% 58%` | `#3E82E9` | Principal cor de destaque utilizada em botões, links e acentuações【191108879806970†L213-L216】. |
+| **Cor azul de brilho (`--glow-blue`)** | `216 90% 56%` | `#297AF3` | Utilizada em gradientes, bordas e elementos decorativos. |
+| **Cor de borda (`--border`)** | `220 12% 20%` | `#2C3039` | Contornos de cartões, inputs e seções【191108879806970†L213-L218】. |
+| **Destructive** | `0 72% 51%` | `#DC2828` | Cor de erro ou alerta, pouco utilizada. |
+| **Rádio base (`--radius`)** | `0.375rem` ≈ 6 px | Define o raio padrão dos cantos arredondados【191108879806970†L213-L216】. |
+
+### Gradientes
+
+- **Gradiente de destaque:** elementos como botões, números em círculos e o texto “**deploy**” usam um gradiente radial/linear que parte de `#3E82E9` (azul vivo) para transparente ou para `#297AF3`. Esse gradiente adiciona brilho e profundidade à arte.
+- **Blobs de fundo:** no Hero há formas circulares semi‑transparentes com degradações de azul e lilás. Estes são criados com gradientes radiais sobrepostos com baixa opacidade (≈10 %).
+
+### Variações de Opacidade
+
+As variáveis fornecem variações com opacidade, por exemplo `--accent-light` (`rgba(62,130,233,0.1)`) e `--accent-border` (`rgba(62,130,233,0.28)`)【191108879806970†L213-L216】. Elas são usadas para fundos de “pills”/tags e bordas de destaque.
+
+## 2. Tipografia
+
+O site utiliza duas famílias principais de fonte:
+
+- **Plus Jakarta Sans** para títulos (font-display)【191108879806970†L220-L221】, com peso 700 e tracking negativo de `‑0.03em`【191108879806970†L229-L231】. A fonte oferece um visual moderno e legível.
+- **Inter** para texto de corpo (font-body)【191108879806970†L220-L221】, com peso regular (400) e sem serifa. Essa fonte é neutra e facilita a leitura em corpos longos.
+- **JetBrains Mono** é carregada como fonte monoespaçada (font-mono)【191108879806970†L220-L221】, usada esporadicamente em tags ou trechos de código.
+
+Tamanhos e pesos típicos:
+
+| Elemento | Tamanho aproximado | Peso | Espaçamento de linha | Letter spacing |
+|---------|-------------------|------|----------------------|----------------|
+| **H1 (Hero)** | 4 – 4.5 rem (64–72 px) | 700 | 1.1 | ‑0.03 em |
+| **H2** | 3 rem (48 px) | 700 | 1.2 | ‑0.03 em |
+| **H3** | 2.25 rem (36 px) | 600 – 700 | 1.3 | ‑0.02 em |
+| **Parágrafo** | 1 rem (16 px) | 400 | 1.6 – 1.7 | normal |
+| **Legendas / small** | 0.875 rem (14 px) | 400 – 500 | 1.5 | 0.02 em |
+| **CTA / Botão** | 1 rem (16 px) | 600 | 1.3 | 0.02 em |
+
+Observação: os títulos usam a família **Plus Jakarta Sans** com variações de peso e tracking negativo para melhorar o impacto visual. O corpo usa **Inter**, conferindo contraste sutil entre títulos e textos.
+
+## 3. Layout
+
+### Largura e Containers
+
+O layout utiliza uma classe `.container` com largura total (`width: 100%`) e padding horizontal de `2rem` (32 px). Em telas largas (≥ 1400 px), essa container tem largura máxima de **1400 px**【191108879806970†L236-L238】. O conteúdo centralizado se comporta assim:
+
+```css
+.container {
+  width: 100%;
+  max-width: 1400px; /* a partir de 1400px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+```
+
+### Estrutura geral
+
+O site é dividido em seções verticais com espaçamentos generosos (entre 6 rem e 10 rem), cada uma ocupando quase toda a largura da `container`.  O uso de **Grid** e **Flexbox** é frequente:
+
+- **Hero Section:** utiliza um layout de duas colunas (`display: grid` ou `flex`) onde a coluna esquerda contém os textos e a direita exibe a foto e formas decorativas. Em telas menores, as colunas empilham-se verticalmente.
+- **Row de métricas:** implementado com **Grid** de 4 colunas que se transforma em 2 colunas no `md` e 1 coluna no `sm`. Os cartões têm espaçamento uniforme (`gap: 1rem` a `1.5rem`).
+- **Seção “Experiência & Especialidades”:** divide a área em duas colunas: esquerda com listas e direita com texto descritivo. Cada coluna utiliza `flex` vertical para alinhar listas e títulos.
+- **Grid de Projetos:** utiliza `grid-template-columns: repeat(auto-fit,minmax(300px,1fr))` para criar cards responsivos. As colunas ajustam-se automaticamente para 3 cards em desktops e 1 – 2 cards em mobile.
+- **Cards de Processo:** implementados como uma lista vertical (`flex-direction: column`), cada item é uma caixa flex com `position: relative` para inserir um número grande de fundo e um círculo numerado no canto.
+- **Seção de “Stack”:** divide o conteúdo em duas colunas: esquerda com cartões que descrevem pilares do método e direita com uma lista de “tags” (pills) exibidas em `flex-wrap: wrap`.
+- **Footer:** utiliza `flex` em coluna para alinhar o texto e os links, com espaçamento vertical.
+
+### Paddings, Margens e Gaps
+
+O spacing base segue incrementos de `0.25rem` (4 px) herdado do Tailwind. Seções principais usam padding vertical entre `6rem` e `10rem` (`96–160 px`) para criar respiro. Cartões e botões utilizam padding interno de `0.75rem 1.5rem` a `1rem 2rem`.
+
+### Breakpoints Responsivos
+
+As larguras de breakpoint típicas são:
+
+- **sm (640 px):** Elementos empilham em uma coluna; navbar se transforma em menu hamburguer.
+- **md (768 px):** Grid de métricas muda para duas colunas; hero ocupa duas linhas.
+- **lg (1024 px):** Ativa layout de duas colunas para a maioria das seções.
+- **xl (1280 px) / 2xl (1400 px):** Seções aproveitam todo o espaço horizontal e mantém margens laterais.
+
+## 4. Componentes
+
+### Navbar
+
+* **Altura:** ~4 rem (64 px).  Em resoluções grandes, o menu é horizontal; no mobile, colapsa para um ícone.
+* **Cores:** fundo transparente inicialmente, mas com uma borda inferior de `1px` e fundo semi‑transparente usando `hsl(var(--background) / 0.8)`. O texto utiliza `--text-primary`, enquanto o botão de contato usa a cor primária.
+* **Comportamento no scroll:** a barra de navegação fica **fixa** no topo (`position: fixed`) e aplica um **backdrop‑blur** leve ao rolar a página; uma barra progressiva de rolagem (2 px) pode aparecer abaixo dela para indicar progresso.
+* **Espaçamento entre itens:** os links têm margem horizontal de `1rem` e utilizam `display: flex` com `gap: 1rem`. O CTA “Fale comigo” recebe maior destaque com padding `0.75rem 1.5rem`, cor de fundo `#3E82E9`, texto branco e borda‐radius de 6 px.
+
+### Hero Section
+
+* **Layout:** duas colunas; a esquerda contém um subtítulo pequeno (“Product Designer”), o título principal, um parágrafo descritivo e um botão CTA; a direita exibe a fotografia em forma circular com efeitos de luz e gradientes radiais.
+* **Alinhamento:** conteúdo alinhado à esquerda com `text-start`; a coluna direita utiliza `flex` para centralizar a imagem verticalmente.
+* **Título:** grande (≈72 px) com quebra de linha; palavras importantes são destacadas em azul ou com gradiente. Usa a fonte *Plus Jakarta Sans* em peso 700.
+* **CTA button:** retângulo arredondado (6 px) com largura mínima de 180 px; fundo gradiente de `#297AF3` a `#3E82E9`; texto em **Inter** capitalizado; um ícone de seta posicionado à direita. No hover, a cor escurece levemente.
+* **Espaçamento:** margem inferior de ~6 rem entre o título e o próximo elemento; padding vertical de cerca de `10rem` para a seção.
+
+### Seções Intermediárias
+
+#### Métricas (Experiência)
+
+* **Cards:** Quatro cartões alinhados em grid. Cada card tem fundo `--card` (`#1C1F25`), borda de `1px` com `--border` (`#2C3039`) e raio de 8 px.  O número é grande (2–3 rem), colorido com a cor primária (`#3E82E9`). O texto inferior usa letras maiúsculas, espaçamento entre letras (`0.1em`) e cor `--text-secondary`.
+* **Responsividade:** Em telas médias, os cards quebram em duas colunas; em mobiles, em uma coluna.
+
+#### Experiência & Especialidades
+
+* **Listas:** Coluna esquerda exibe listas com marcadores em azul ou ícones personalizados. Os títulos (“Experiência”, “Especialidades”) usam `H3` e a cor primária; cada item da lista usa um marcador circular pequeno em `#3E82E9`.
+* **Texto:** Coluna direita contém uma frase grande (“Não projeto telas. Projeto decisões.”) com parte em branco e parte em azul.  Os parágrafos subsequentes usam cores secundárias.
+* **Botão:** Um botão secundário com borda azul e texto azul; fundo transparente.  Ao hover, o fundo azul claro com opacidade 10 % (`rgba(62,130,233,0.1)`).
+
+### Grid de Projetos
+
+* **Card do projeto:** retângulo com raio 8–12 px e sombra leve (`--shadow-card`)【191108879806970†L217-L219】. O topo exibe a imagem do projeto (ou gradiente) com aspecto 16:9, coberto por um overlay semi‑transparente. Abaixo, o título usa `H3` branco; tags de categoria aparecem em formas “pill” com borda azul clara e texto azul.
+* **Interação:** Ao passar o mouse, o card aumenta a sombra (`--shadow-card-hover`)【191108879806970†L217-L219】 e a imagem fica ligeiramente mais brilhante.
+
+### Cards de Processo
+
+* **Estrutura:** Cada etapa é um card `flex` com fundo `--card`, borda `--border` e raio 8 px. Um círculo à esquerda contém um número com cor primária e fundo gradiente; um número grande e translúcido é posicionado no lado direito do card (uso de `position: absolute` e opacidade baixa). O título é azul, a descrição em cinza claro e as tags são “pills” com bordas azuis.
+* **Spacing:** padding interno de `1.5rem 2rem`, margem vertical de `2rem`. As tags usam `gap: .5rem` e `flex-wrap: wrap`.
+
+### Stack / Método de Trabalho
+
+* **Cards de pilar:** Retângulos empilhados com ícone no topo, título e descrição. Cada card utiliza um **gradiente radial** muito sutil (azul escuro para azul médio) no fundo, borda fina e sombra leve.  O ícone é cercado por um fundo circular azul claro translúcido.
+* **Lista de setores:** A segunda coluna contém “pills” que representam tipos de produtos (ERP·PDV, Fintech · SaaS, etc.). Estas pills têm fundo semi‑transparente (`rgba(62,130,233,0.1)`), borda `rgba(62,130,233,0.28)` e texto azul. Elas usam `display: inline-flex`, padding `0.5rem 1rem`, raio total (9999 px) e `gap: 0.5rem`.
+
+### Botões
+
+* **Primário:** fundo `linear-gradient(90deg, #297AF3, #3E82E9)`, texto branco, raio 6 px, padding `0.75rem 1.5rem`, fonte **Inter** em negrito. `transition: background-color .2s cubic-bezier(0.16,1,0.32,1)`. Em hover, a opacidade diminui para 0.9 ou a cor escurece.
+* **Secundário:** fundo transparente com borda de `1px` azul (`--accent-border`), texto azul; ao passar o mouse, fundo azul claro (`--accent-light`) e borda um pouco mais escura.
+* **Ghost/Link:** texto azul com sublinhado ao hover, sem fundo; usado em links de navegação.
+* **Pills (tags):** pequenas cápsulas com raio total, borda azul, fundo transparente.  O tamanho da fonte é 0.875 rem e o texto usa peso 500.
+
+### Inputs e Formulários
+
+* **Estilos:** campos possuem fundo `--surface-3` (`#262930`), borda `1px solid #2C3039`, raio 8 px e padding interno de `0.75rem 1rem`. Os placeholders usam `--text-muted` para baixa intensidade.
+* **Focus state:** no foco, a borda muda para a cor primária (`#3E82E9`), com um anel (box‑shadow) de 2 px da mesma cor (propriedade `ring`).
+* **Select/Tags input:** tags são implementadas como botões do tipo toggle; quando selecionadas, têm fundo `#3E82E9` com texto branco, caso contrário, fundo semitransparente.
+* **Botão de envio:** igual ao botão primário, porém ocupa a largura total do formulário em telas pequenas.
+
+## 5. Exemplos de CSS/Tailwind
+
+Abaixo alguns trechos de código que reproduzem os estilos principais usando classes Tailwind (ou CSS equivalente).  Ajuste conforme necessário:
+
+```jsx
+{/* Container */}
+<div className="container mx-auto px-8 max-w-[1400px]">
+  {/* Navbar */}
+  <nav className="fixed top-0 inset-x-0 h-16 flex items-center justify-between backdrop-blur border-b border-[--border] bg-[hsl(var(--background)/0.8)] px-8">
+    <ul className="hidden md:flex gap-6 text-[--text-primary]">
+      <li className="hover:text-[--accent-color]">Sobre</li>
+      <li>Projetos</li>
+      <li>Processo</li>
+      <li>Stack</li>
+      <li>Contato</li>
+    </ul>
+    <button className="bg-gradient-to-r from-[#297AF3] to-[#3E82E9] text-white px-6 py-3 rounded-md font-semibold hover:opacity-90 transition">
+      Fale comigo
+    </button>
+  </nav>
+
+  {/* Hero */}
+  <section className="min-h-screen grid lg:grid-cols-2 gap-8 py-24">
+    <div className="flex flex-col justify-center">
+      <span className="text-sm uppercase tracking-wider text-[--accent-color]">Product Designer</span>
+      <h1 className="text-6xl font-display font-bold leading-tight text-[--text-primary]">
+        Sistemas que escalam,
+        <br /> reduzem erros e <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#297AF3] to-[#3E82E9]">aceleram decisões.</span>
+      </h1>
+      <p className="mt-6 max-w-lg text-lg text-[--text-secondary]">
+        Transformo insights em soluções digitais de alto impacto, conectando estratégia de
+        produto, design e tecnologia.
+      </p>
+      <div className="mt-10 flex gap-4">
+        <button className="bg-gradient-to-r from-[#297AF3] to-[#3E82E9] text-white px-8 py-4 rounded-md font-medium hover:opacity-90 transition">
+          Fale comigo
+        </button>
+        <button className="border border-[--accent-border] text-[--accent-color] px-8 py-4 rounded-md hover:bg-[rgba(62,130,233,0.1)] transition">
+          Visão de produto
+        </button>
+      </div>
+    </div>
+    <div className="relative flex items-center justify-center">
+      {/* foto e blob decorativo */}
+      <div className="absolute -z-10 w-80 h-80 rounded-full bg-gradient-to-br from-[#297AF3]/40 to-[#3E82E9]/20 blur-3xl" />
+      <img src="/path/to/photo.jpg" alt="Vitor Zaretzki" className="w-80 h-80 rounded-full object-cover border-4 border-[rgba(62,130,233,0.28)]" />
+    </div>
+  </section>
+
+  {/* Cards de Métricas */}
+  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-20">
+    <div className="bg-[--card] border border-[--border] rounded-lg p-8 shadow-[--shadow-card] text-center">
+      <span className="block text-4xl font-bold text-[--accent-color]">6+</span>
+      <span className="mt-2 uppercase text-sm tracking-wider text-[--text-secondary]">Anos de experiência</span>
+    </div>
+    {/* ...outros cards */}
+  </section>
+
+  {/* Exemplo de Input */}
+  <label className="block">
+    <span className="text-sm text-[--text-secondary]">Seu nome</span>
+    <input type="text" className="mt-2 w-full bg-[--surface-3] border border-[--border] rounded-md px-4 py-3 text-[--text-primary] placeholder-[--text-muted] focus:outline-none focus:border-[--accent-color] focus:ring-2 focus:ring-[--accent-color]" />
+  </label>
+```
+
+## 6. Tokens de Design
+
+Para facilitar a reutilização das cores e estilos, você pode definir variáveis CSS na pseudo‑classe `:root`:
+
+```css
+:root {
+  /* Cores principais */
+  --color-background: #15181D; /* fundo geral */
+  --color-card: #1C1F25; /* superfícies de cartões */
+  --color-surface-3: #262930;
+  --color-surface-4: #31353E;
+  --color-border: #2C3039;
+  --color-primary: #3E82E9; /* cor de destaque */
+  --color-primary-light: rgba(62, 130, 233, 0.1);
+  --color-primary-border: rgba(62, 130, 233, 0.28);
+  --color-glow: #297AF3;
+  /* Texto */
+  --color-text-primary: #E6EAEE;
+  --color-text-secondary: #929EA9;
+  --color-text-muted: #676D79;
+  /* Sombra */
+  --shadow-card: 0 1px 3px 0 rgba(23, 28, 40, 0.3), 0 1px 2px -1px rgba(23, 28, 40, 0.2);
+  --shadow-card-hover: 0 4px 24px -4px rgba(62, 130, 233, 0.18), 0 2px 8px -2px rgba(23, 28, 40, 0.3);
+  /* Raio padrão */
+  --radius-base: 6px;
+  /* Fontes */
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+```
+
+Com essas variáveis, você pode personalizar facilmente cores, fontes e sombras em toda a aplicação. A estrutura modular e o uso de Tailwind/CSS Utility classes facilitam a manutenção e a expansão da landing page.
