@@ -139,7 +139,6 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#inicio" aria-label="Herberth Guimaraes">
           <img src="/favicon.ico" alt="" />
-          <span>Design • Herberth Guimaraes</span>
         </a>
         <nav className="nav-links" aria-label="Navegacao principal">
           <a href="#sobre">Sobre</a>
