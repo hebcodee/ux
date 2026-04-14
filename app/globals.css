@@ -93,8 +93,7 @@ select {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-width: 240px;
+  min-width: 120px;
   color: #d9dde4;
   font-size: 1rem;
   font-weight: 500;
@@ -102,8 +101,8 @@ select {
 }
 
 .brand img {
-  width: 18px;
-  height: 18px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
 }
 
